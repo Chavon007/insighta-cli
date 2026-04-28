@@ -4,7 +4,7 @@ import open from "open";
 import chalk from "chalk";
 import ora from "ora";
 import axios from "axios";
-import { saveCredentials } from "../../utils/credentials";
+import { saveCredentials } from "../../utils/credentials.js";
 
 const BASE_URL = process.env.API_URL || "http://localhost:5000";
 const PORT = 9876;

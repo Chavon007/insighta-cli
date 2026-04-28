@@ -2,7 +2,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-const credentialsDir = path.jsoin(os.homedir(), "insighta");
+const credentialsDir = path.join(os.homedir(), ".insighta");
 const credentialsFile = path.join(credentialsDir, "credentials.json");
 
 export const saveCredentials = (data) => {
