@@ -20,7 +20,7 @@ export const loginCommand = async () => {
 
   const authUrl =
     `${BASE_URL}/auth/github?` +
-    `code_challenge=${code_challenge}&code_challenge_method=S256&state=${state}`;
+    `code_challenge=${code_challenge}&code_challenge_method=S256&state=${state}&redirect_port=9876`;
 
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost:9876");
@@ -38,7 +38,9 @@ export const loginCommand = async () => {
       server.close();
 
       if (error || !access_token) {
-        spinner.fail(chalk.red("Login failed: " + (error || "no token received")));
+        spinner.fail(
+          chalk.red("Login failed: " + (error || "no token received")),
+        );
         return;
       }
 
