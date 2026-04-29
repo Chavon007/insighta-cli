@@ -1,13 +1,12 @@
 import http from "http";
 import crypto from "crypto";
-import open from "open";
 import chalk from "chalk";
 import ora from "ora";
 import axios from "axios";
+import { exec } from "child_process";
 import { saveCredentials } from "../../utils/credentials.js";
 
 const BASE_URL = "https://identity-profile-api-service.vercel.app";
-const PORT = 9876;
 
 const generateCodeVerifier = () => {
   return crypto.randomBytes(32).toString("base64url");
@@ -26,10 +25,9 @@ export const loginCommand = async () => {
   const authUrl =
     `${BASE_URL}/auth/github?` +
     `code_challenge=${code_challenge}&code_challenge_method=S256`;
-  // start local callback server
 
   const server = http.createServer(async (req, res) => {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://localhost:9876`);
 
     if (url.pathname === "/callback") {
       const code = url.searchParams.get("code");
@@ -40,11 +38,14 @@ export const loginCommand = async () => {
       server.close();
 
       try {
-        const { data } = await axios.post(`${BASE_URL}/auth/github/callback`, {
-          code,
-          state,
-          code_verifier,
-        });
+        const { data } = await axios.post(
+          `${BASE_URL}/auth/github/callback`,
+          {
+            code,
+            state,
+            code_verifier,
+          }
+        );
 
         saveCredentials({
           access_token: data.access_token,
@@ -52,14 +53,19 @@ export const loginCommand = async () => {
           username: data.user.username,
           role: data.user.role,
         });
-        spinner.succeed(chalk.green(`Logged in as @${data.user.username}`));
+
+        spinner.succeed(
+          chalk.green(`Logged in as @${data.user.username}`)
+        );
       } catch (err) {
         spinner.fail(chalk.red("Login failed: " + err.message));
       }
     }
   });
 
-  server.listen(PORT, () => {
-    open(authUrl);
+  server.listen(9876, () => {
+    exec(`start "" "${authUrl}"`);
+    spinner.succeed("Browser opened. Complete login in GitHub.");
+    console.log("After login, run: insighta whoami");
   });
 };
