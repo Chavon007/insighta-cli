@@ -3,7 +3,7 @@ import { getCredentials, saveCredentials, clearCredentials } from "./credentials
 import dotenv from "dotenv";
 dotenv.config();
 
-const BASE_URL = process.env.API_URL || "http://localhost:5000";
+const BASE_URL = "https://identity-profile-api-service.vercel.app";
 
 const api = axios.create({
   baseURL: BASE_URL,
