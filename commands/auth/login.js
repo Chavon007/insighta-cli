@@ -6,7 +6,7 @@ import ora from "ora";
 import axios from "axios";
 import { saveCredentials } from "../../utils/credentials.js";
 
-const BASE_URL = process.env.API_URL || "http://localhost:5000";
+const BASE_URL = "https://identity-profile-api-service.vercel.app";
 const PORT = 9876;
 
 const generateCodeVerifier = () => {
